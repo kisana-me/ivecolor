@@ -1,6 +1,6 @@
 # IVECOLOR
 
-![IVECOLORの画像](src/public/img-2.webp)
+![IVECOLORの画像](https://kisana.me/images/ivecolor/ivecolor-1.png)
 
 ブログです。
 

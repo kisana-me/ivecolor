@@ -8,7 +8,7 @@ class SignupController < ApplicationController
 
   def create
     @account = Account.new(account_params)
-    @account.meta["subscription"] = session[:oauth_signup]["subscription"]
+    @account.meta["subscription"] = session[:oauth_signup]&.dig("subscription")
 
     if @account.save
       sign_in(@account)

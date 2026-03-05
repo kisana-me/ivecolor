@@ -31,7 +31,7 @@ function loadYouTubeIframeApi() {
 }
 
 export default class extends Controller {
-  static targets = ["player", "content"]
+  static targets = ["player", "content", "cue"]
   static values = {
     videoId: String,
     cues: Array,
@@ -71,6 +71,10 @@ export default class extends Controller {
       videoId: this.videoIdValue,
       events: {
         onReady: () => {
+          if (this.hasPlayerTarget) {
+            this.playerTarget.removeAttribute("width")
+            this.playerTarget.removeAttribute("height")
+          }
           this.applyLayout()
           this.startTimer()
           this.updateFromPlayer()
@@ -86,7 +90,7 @@ export default class extends Controller {
     if (!this.hasPlayerTarget || !this.hasContentTarget) return
 
     const viewportH = window.innerHeight || 0
-    const maxTotalH = Math.max(0, viewportH - 100)
+    const maxTotalH = Math.max(0, viewportH - 70)
 
     const headerEl = this.element.querySelector(".yt-sync-header")
     const headerH = headerEl ? headerEl.getBoundingClientRect().height : 0
@@ -102,15 +106,8 @@ export default class extends Controller {
     const videoH = Math.max(1, Math.floor(Math.min(desiredVideoH, videoMaxH)))
     const contentH = Math.max(1, Math.floor(available - videoH))
 
-    this.playerTarget.style.height = `${videoH}px`
-    this.playerTarget.style.width = "100%"
-
-    const iframe = this.playerTarget.querySelector("iframe")
-    if (iframe) {
-      iframe.style.width = "100%"
-      iframe.style.height = "100%"
-      iframe.style.display = "block"
-    }
+    const mainEl = this.element.querySelector(".yt-sync-main")
+    if (mainEl) mainEl.style.height = `${videoH}px`
 
     this.contentTarget.style.height = `${contentH}px`
     this.contentTarget.style.overflowY = "auto"
@@ -138,16 +135,7 @@ export default class extends Controller {
   }
 
   updateContent(currentTimeSeconds) {
-    if (!this.hasContentTarget) return
-
     const cues = Array.isArray(this.cuesValue) ? this.cuesValue : []
-    if (cues.length === 0) {
-      if (this.lastCueIndex !== -1) {
-        this.contentTarget.innerHTML = ""
-        this.lastCueIndex = -1
-      }
-      return
-    }
 
     let index = -1
     for (let i = 0; i < cues.length; i += 1) {
@@ -158,9 +146,14 @@ export default class extends Controller {
     }
 
     if (index === this.lastCueIndex) return
-
-    const html = index >= 0 ? String(cues[index]?.html ?? "") : ""
-    this.contentTarget.innerHTML = html
     this.lastCueIndex = index
+
+    this.cueTargets.forEach((el, i) => {
+      if (i === index) {
+        el.classList.remove("yt-sync-cue--hidden")
+      } else {
+        el.classList.add("yt-sync-cue--hidden")
+      }
+    })
   }
 }

@@ -24,6 +24,70 @@ class MarkdownRenderer
         end
       end
 
+      # support embedding X (Twitter) using ?[x](tweet_id)
+      text = text.gsub(/\?\[x\]\(([a-zA-Z0-9_]+)\)/) do
+        tweet_id = ::Regexp.last_match(1)
+        # Using the standard widget HTML for X (with max-width for responsive fit)
+        <<~HTML.strip.delete("\n\r\t")
+          <div class="embed-container" data-controller="x-embed">
+            <div class="embed-loader" data-x-embed-target="loader">
+              <div class="embed-spinner"></div>
+              <span>Xの投稿を準備中...</span>
+            </div>
+            <blockquote class="twitter-tweet" data-dnt="true" style="max-width: 550px; margin: 0 auto;">
+              <a href="https://twitter.com/i/status/#{tweet_id}"></a>
+            </blockquote>
+          </div>
+        HTML
+      end
+
+      # support embedding TikTok using ?[tiktok](video_id)
+      text = text.gsub(/\?\[tiktok\]\(([0-9]+)\)/) do
+        video_id = ::Regexp.last_match(1)
+        <<~HTML.strip.delete("\n\r\t")
+          <div class="embed-container" data-controller="tiktok-embed">
+            <div class="embed-loader" data-tiktok-embed-target="loader">
+              <div class="embed-spinner"></div>
+              <span>TikTokの投稿を準備中...</span>
+            </div>
+            <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@user/video/#{video_id}" data-video-id="#{video_id}" style="width: 100%; max-width: 325px; margin: 0 auto;">
+              <section></section>
+            </blockquote>
+          </div>
+        HTML
+      end
+
+      # support embedding Instagram using ?[ig](shortcode)
+      text = text.gsub(/\?\[ig\]\(([a-zA-Z0-9_\-]+)\)/) do
+        shortcode = ::Regexp.last_match(1)
+        <<~HTML.strip.delete("\n\r\t")
+          <div class="embed-container" data-controller="ig-embed">
+            <div class="embed-loader" data-ig-embed-target="loader">
+              <div class="embed-spinner"></div>
+              <span>Instagramの投稿を準備中...</span>
+            </div>
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/#{shortcode}/" data-instgrm-version="14" style="background:#FFF; border:0; margin: 0 auto; max-width:540px; min-width:326px; padding:0; width:100%;">
+            </blockquote>
+          </div>
+        HTML
+      end
+
+      # support embedding YouTube using ?[youtube](video_id)
+      text = text.gsub(/\?\[youtube\]\(([a-zA-Z0-9_\-]+)\)/) do
+        video_id = ::Regexp.last_match(1)
+        <<~HTML.strip.delete("\n\r\t")
+          <div class="embed-container" data-controller="youtube-embed">
+            <div class="embed-loader" data-youtube-embed-target="loader">
+              <div class="embed-spinner"></div>
+              <span>YouTubeの動画を準備中...</span>
+            </div>
+            <div class="youtube-embed-frame">
+              <iframe src="https://www.youtube.com/embed/#{video_id}" data-youtube-embed-target="iframe" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
+            </div>
+          </div>
+        HTML
+      end
+
       # support embedding an image (single or multiple) using ?[image](aid|caption, aid2|caption2)
       # - each item: aid or aid|caption
       # - multiple items: separated by comma
@@ -102,7 +166,7 @@ class MarkdownRenderer
           end
 
           normalized_cues.sort_by! { |c| c[:at] }
-          cues_json = normalized_cues.to_json
+          cues_json = normalized_cues.map { |c| { at: c[:at] } }.to_json
 
           helpers = ApplicationController.helpers
           inner = helpers.content_tag(:div, class: "yt-sync-inner") do
@@ -113,9 +177,23 @@ class MarkdownRenderer
               </svg>
             SVG
             header_content = yt_logo_svg + helpers.content_tag(:span, "YouTube Sync", class: "yt-sync-header-text")
+
+            player_container = helpers.content_tag(:div, class: "yt-sync-main") do
+              helpers.content_tag(:div, "", class: "yt-sync-player", data: { yt_sync_target: "player" })
+            end
+
+            cue_divs = normalized_cues.each_with_index.map do |cue, i|
+              helpers.content_tag(
+                :div,
+                cue[:html].html_safe,
+                class: "yt-sync-cue#{i == 0 ? '' : ' yt-sync-cue--hidden'}",
+                data: { yt_sync_target: "cue" }
+              )
+            end.join.html_safe
+
             helpers.content_tag(:div, header_content, class: "yt-sync-header") +
-              helpers.content_tag(:div, "", class: "yt-sync-player", data: { yt_sync_target: "player" }) +
-              helpers.content_tag(:div, "", class: "yt-sync-content", data: { yt_sync_target: "content" })
+              player_container +
+              helpers.content_tag(:div, cue_divs, class: "yt-sync-content", data: { yt_sync_target: "content" })
           end
           helpers.content_tag(:div, inner,
                               class: "yt-sync",
@@ -162,7 +240,7 @@ class MarkdownRenderer
     digest = Digest::SHA256.hexdigest(text)
     cache_key = [
       "markdown_renderer",
-      "v1",
+      "v2",
       safe_render ? "safe1" : "safe0",
       skip_yt_sync ? "ytskip1" : "ytskip0",
       digest

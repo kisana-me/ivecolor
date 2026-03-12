@@ -1,8 +1,7 @@
 class ApplicationController < ActionController::Base
   include ErrorManagement
   include SessionManagement
-
-  include Tools
+  include TurnstileManagement
   include Pagination
 
   before_action :current_account

@@ -23,7 +23,6 @@ class PostsController < ApplicationController
     else
       log_view(@post)
     end
-    @problem, session[:answer] = generate_random_problem
   end
 
   def new

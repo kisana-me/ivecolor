@@ -79,6 +79,18 @@ img {
 .alert {
   background-color: #ffdccd;
 }
+.cf-turnstile {
+  width: 300px;
+  height: 65px;
+  display: inline-block;
+  overflow: hidden;
+  background: #fafafa;
+}
+@media (prefers-color-scheme: dark) {
+  .cf-turnstile {
+    background: #232323;
+  }
+}
 
 
 /* 詳細設定 */

@@ -1,4 +1,7 @@
-<div class="comment-form">
+<div class="comment-form"
+  data-controller="turnstile"
+  data-turnstile-environment-value="<%= Rails.env %>"
+  data-turnstile-sitekey-value="<%= ENV.fetch("CLOUDFLARE_TURNSTILE_SITE_KEY") %>">
   <%= form_with(model: comment, url: url, data: { turbo: false }) do |f| %>
     <%= render 'shared/error_messages', instead: comment %>
     <%= f.hidden_field :post_aid, value: post_aid %>
@@ -12,11 +15,6 @@
       <div><%= @current_account.name %>としてコメント</div>
     <% end %>
     <br />
-    <p>お手数ですが、計算問題を解き半角数字で入力してください。</p>
-    <p>「*」は掛け算、「/」は割り算です。</p>
-    <%= label :test1, :test, @problem %>
-    <%= text_field :test1, :test, placeholder: '解答' %>
-    <br />
     <%= f.label :name, '名前' %>
     <%= f.text_field :name, placeholder: '名前' %>
     <br />
@@ -26,9 +24,10 @@
     <%= f.label :address, 'アドレス(非公開)' %>
     <%= f.text_field :address, placeholder: 'アドレス(非公開)' %>
     <br />
+    <div class="cf-turnstile" data-turnstile-target="widget"></div>
     <br />
     <p>投稿すると、当サイトの利用規約・ポリシー・免責事項に同意したとみなされます。</p>
     <p>管理者に承認されると一般掲示されます。</p>
-    <%= f.submit "投稿" %>
+    <%= f.submit "投稿", data: { turnstile_target: "submit" }, disabled: true %>
   <% end %>
 </div>

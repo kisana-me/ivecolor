@@ -5,7 +5,10 @@ Rails.application.routes.draw do
   get "terms-of-service" => "pages#terms_of_service"
   get "privacy-policy" => "pages#privacy_policy"
   get "contact" => "pages#contact"
-  get "sitemap" => "pages#sitemap"
+  # get "sitemap" => "pages#sitemap"
+
+  # Sitemaps
+  get "sitemap", to: "sitemaps#index", defaults: { format: "xml" }
 
   # Sessions
   get "sessions/start"

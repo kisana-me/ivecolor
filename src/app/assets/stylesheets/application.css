@@ -13,12 +13,7 @@
  *= require_tree .
  *= require_self
  */
-.wf-roundedmplus1c {
-  font-family: "M PLUS Rounded 1c";
-}
-/*
-  background: linear-gradient(90deg, rgba(240,164,255,1) 0%, rgba(255,128,156,1) 16%, rgba(255,211,153,1) 36%, rgba(197,250,130,1) 57%, rgba(140,244,255,1) 80%, rgba(166,128,255,1) 100%);
-*/
+
 body {
   margin: 0;
 }
@@ -36,6 +31,78 @@ main {
 }
 img {
   width: 100%;
+}
+h1, h2, h3, h4, h5, h6, p {
+  padding: 0 0 0 5px;
+  margin: 12px 0;
+}
+h1 {
+  font-size: 21px;
+  border-left: 7px solid #ff9b9b;
+  background-color: #ff9b9b77;
+}
+h2 {
+  font-size: 20px;
+  border-left: 6px solid #b894f3;
+  background-color: #b894f377;
+}
+h3 {
+  font-size: 19px;
+  border-left: 5px solid #82c3e9;
+  background-color: #82c3e977;
+}
+h4 {
+  font-size: 18px;
+  border-left: 4px solid #a7cc45;
+  background-color: #a7cc4577;
+}
+h5 {
+  font-size: 17px;
+  border-left: 3px solid #a9dbc1;
+  background-color: #a9dbc177;
+}
+h6 {
+  font-size: 16px;
+  border-left: 2px solid #e5acd0;
+  background-color: #e5acd077;
+}
+
+.wf-roundedmplus1c {
+  font-family: "M PLUS Rounded 1c";
+}
+.misskey-share-button {
+  height: 20px;
+  line-height: 18px;
+  font-size: 11px;
+  padding: 0px 6px;
+  border-radius: 14px;
+  background: rgb(40, 55, 29);
+  color: rgb(180, 233, 0);
+  text-decoration: none;
+}
+.x-share-button {
+  height: 20px;
+  line-height: 18px;
+  font-size: 11px;
+  padding: 0px 6px;
+  border-radius: 14px;
+  background: #000;
+  color: #FFF;
+  text-decoration: none;
+}
+.sub-heading {
+  padding: 0 0 0 5px;
+  margin: 5px 0;
+  font-size: 20px;
+  border-left: 3px solid #b1ebff;
+  font-weight: bold;
+}
+.highlight {
+  overflow-x: auto;
+}
+.highlight pre {
+  margin: 0;
+  padding: 10px;
 }
 .main-container {
   max-width: 780px;
@@ -82,91 +149,16 @@ img {
 .cf-turnstile {
   width: 300px;
   height: 65px;
+  border-radius: 2px;
   display: inline-block;
   overflow: hidden;
   background: #fafafa;
 }
+
 @media (prefers-color-scheme: dark) {
   .cf-turnstile {
     background: #232323;
   }
-}
-
-
-/* 詳細設定 */
-h1, h2, h3, h4, h5, h6, p {
-  padding: 0 0 0 5px;
-  margin: 12px 0;
-}
-h1 {
-  font-size: 21px;
-  border-left: 7px solid #ff9b9b;
-  background-color: #ff9b9b77;
-}
-h2 {
-  font-size: 20px;
-  border-left: 6px solid #b894f3;
-  background-color: #b894f377;
-}
-h3 {
-  font-size: 19px;
-  border-left: 5px solid #82c3e9;
-  background-color: #82c3e977;
-}
-h4 {
-  font-size: 18px;
-  border-left: 4px solid #a7cc45;
-  background-color: #a7cc4577;
-}
-h5 {
-  font-size: 17px;
-  border-left: 3px solid #a9dbc1;
-  background-color: #a9dbc177;
-}
-h6 {
-  font-size: 16px;
-  border-left: 2px solid #e5acd0;
-  background-color: #e5acd077;
-}
-iframe {
-  /* aspect-ratio: 16 / 9;
-  width: 100%;
-  height: 100%; */
-}
-
-.misskey-share-button {
-  height: 20px;
-  line-height: 18px;
-  font-size: 11px;
-  padding: 0px 6px;
-  border-radius: 14px;
-  background: rgb(40, 55, 29);
-  color: rgb(180, 233, 0);
-  text-decoration: none;
-}
-.x-share-button {
-  height: 20px;
-  line-height: 18px;
-  font-size: 11px;
-  padding: 0px 6px;
-  border-radius: 14px;
-  background: #000;
-  color: #FFF;
-  text-decoration: none;
-}
-.sub-heading {
-  padding: 0 0 0 5px;
-  margin: 5px 0;
-  font-size: 20px;
-  border-left: 3px solid #b1ebff;
-  font-weight: bold;
-}
-.highlight {
-  overflow-x: auto;
-}
-.highlight pre {
-  margin: 0;
-  padding: 10px;
 }
 @media (max-width: 528px) {
   /* 以下 */

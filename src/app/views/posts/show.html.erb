@@ -77,8 +77,8 @@
     </div>
 
     <div class="post-meta">
-      <a href="https://x.com/intent/post?text=<%= URI.encode_www_form_component(full_title(@post.title)) %>&url=<%= full_url("/posts/#{@post.aid}") %>" class="x-share-button" target="_blank">Xに共有</a>
-      <a href="https://misskey-hub.net/share?text=<%= URI.encode_www_form_component(full_title(@post.title)) %>&url=<%= full_url("/posts/#{@post.aid}") %>" class="misskey-share-button" target="_blank">Misskeyに共有</a>
+      <a href="https://x.com/intent/post?text=<%= URI.encode_www_form_component(full_title(@post.title)) %>&url=<%= post_url(@post.name_id) %>" class="x-share-button" target="_blank">Xに共有</a>
+      <a href="https://misskey-hub.net/share?text=<%= URI.encode_www_form_component(full_title(@post.title)) %>&url=<%= post_url(@post.name_id) %>" class="misskey-share-button" target="_blank">Misskeyに共有</a>
     </div>
   </div>
 
@@ -99,8 +99,8 @@
   <div class="post-ending">
     <hr class="post-hr"/>
     <div class="post-meta">
-      <a href="https://x.com/intent/post?text=<%= URI.encode_www_form_component(full_title(@post.title)) %>&url=<%= full_url("/posts/#{@post.aid}") %>" class="x-share-button" target="_blank">Xに共有</a>
-      <a href="https://misskey-hub.net/share?text=<%= URI.encode_www_form_component(full_title(@post.title)) %>&url=<%= full_url("/posts/#{@post.aid}") %>" class="misskey-share-button" target="_blank">Misskeyに共有</a>
+      <a href="https://x.com/intent/post?text=<%= URI.encode_www_form_component(full_title(@post.title)) %>&url=<%= post_url(@post.name_id) %>" class="x-share-button" target="_blank">Xに共有</a>
+      <a href="https://misskey-hub.net/share?text=<%= URI.encode_www_form_component(full_title(@post.title)) %>&url=<%= post_url(@post.name_id) %>" class="misskey-share-button" target="_blank">Misskeyに共有</a>
     </div>
   </div>
 

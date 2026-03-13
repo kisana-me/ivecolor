@@ -5,26 +5,22 @@ class CommentsController < ApplicationController
   def create
     @comment = Comment.new(comment_params)
 
-    unless verify_turnstile(params["cf-turnstile-response"])
-      # @comment.errors.add(:base, :failed_captcha)
-      flash[:alert] = "botでないことを証明してください"
-      redirect_to post_path(params[:comment][:post_aid])
-      return
+    @target_dom_id = "comment-form"
+    if @comment.replied_aid.present?
+      @target_dom_id += "-#{@comment.replied_aid}"
     end
 
-    post = Post.find_by(aid: params[:comment][:post_aid])
-    if params[:comment][:replied].present?
-      comment = Comment.find_by(aid: params[:comment][:replied])
-      @comment.comment = comment if comment.comment.nil?
+    unless verify_turnstile(params["cf-turnstile-response"])
+      @comment.errors.add(:base, "botでないことを証明してください")
+      return render_error()
     end
-    @comment.account = @current_account
-    @comment.post = post
+
     if @comment.save
-      flash[:notice] = "コメントを書き込みました"
+      flash.now[:notice] = "コメントを投稿しました"
+      render :create, formats: :turbo_stream
     else
-      flash[:alert] = "エラー:#{@comment.errors.full_messages.join(', ')}"
+      render_error()
     end
-    redirect_to post_path(post.name_id)
   end
 
   def update
@@ -41,6 +37,8 @@ class CommentsController < ApplicationController
   def comment_params
     params.expect(
       comment: %i[
+        post_aid
+        replied_aid
         name
         content
         address
@@ -56,5 +54,23 @@ class CommentsController < ApplicationController
 
   def set_comment
     @comment = Comment.find_by(aid: params[:aid])
+  end
+
+  def render_error()
+    flash.now[:alert] = "コメントを投稿できませんでした"
+    locals = {
+      comment: @comment,
+      url: comments_path,
+      post_aid: @comment.post_aid
+    }
+    locals[:initial_replied] = @comment.replied_aid if @comment.replied_aid.present?
+    render turbo_stream: [
+      turbo_stream.replace(
+        @target_dom_id,
+        partial: "form",
+        locals: locals
+      ),
+      turbo_stream.update("flash", partial: "shared/flash")
+    ], status: :unprocessable_entity
   end
 end

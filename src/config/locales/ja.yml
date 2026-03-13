@@ -1,6 +1,10 @@
 ja:
   activerecord:
     attributes:
+      comment:
+        name: "名前"
+        content: "コメント"
+        address: "連絡先"
     enums:
       account:
         visibility:
@@ -27,6 +31,7 @@ ja:
         record_invalid: "バリデーションに失敗しました: %{errors}"
         # default
         blank: "を入力してください"
+        required: "は必須です"
         too_short: "は%{count}文字以上で入力してください"
         too_long: "は%{count}文字以内で入力してください"
         taken: "は使用できません"

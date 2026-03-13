@@ -1,20 +1,20 @@
 <div class="comment-form"
+  id="<%= "comment-form" + (defined?(initial_replied) ? "-#{initial_replied}" : "") %>"
   data-controller="turnstile"
   data-turnstile-environment-value="<%= Rails.env %>"
   data-turnstile-sitekey-value="<%= ENV.fetch("CLOUDFLARE_TURNSTILE_SITE_KEY") %>">
-  <%= form_with(model: comment, url: url, data: { turbo: false }) do |f| %>
+  <%= form_with(model: comment, url: url) do |f| %>
     <%= render 'shared/error_messages', instead: comment %>
     <%= f.hidden_field :post_aid, value: post_aid %>
     <% if (defined? initial_replied) %>
       <div>
-        <%= f.hidden_field :replied, value: initial_replied %>
-        コメントID:<%= initial_replied %>のスレッドへの返信
+        <%= f.hidden_field :replied_aid, value: initial_replied %>
+        コメントID:<%= initial_replied %>のスレッドへ返信
       </div>
     <% end %>
     <% if @current_account %>
       <div><%= @current_account.name %>としてコメント</div>
     <% end %>
-    <br />
     <%= f.label :name, '名前' %>
     <%= f.text_field :name, placeholder: '名前' %>
     <br />

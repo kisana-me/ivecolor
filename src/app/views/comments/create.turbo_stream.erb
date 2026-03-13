@@ -1,0 +1,11 @@
+<%= turbo_stream.update @target_dom_id do %>
+  <div style="color: #ff369f; font-weight: bold;">コメントを投稿しました！</div>
+  <small>コメントありがとうございます。管理者に承認されると一般掲示されます。</small>
+  <div>
+    <strong>名前:</strong> <%= @comment.name %><br />
+    <strong>内容:</strong> <%= @comment.content %><br />
+    <strong>アドレス:</strong> <%= @comment.address %>
+  </div>
+<% end %>
+
+<%= turbo_stream.update "flash", partial: "shared/flash" %>

@@ -105,10 +105,7 @@
   </div>
 
   <div class="post-comments">
-    <details>
-      <summary>コメントを残す</summary>
-      <%= render 'comments/form', comment: Comment.new, url: comments_path, post_aid: @post.aid %>
-    </details>
-    <%= render 'comments/comments', post: @post %>
+    <%= render "comments/form", comment: Comment.new, url: comments_path, post_aid: @post.aid %>
+    <%= render "comments/comments", post: @post %>
   </div>
 </div>

@@ -131,21 +131,6 @@ h6 {
   box-sizing: border-box;
   overflow-y: auto;
 }
-.flash {
-  position: fixed;
-  right: 37px;
-  bottom: 37px;
-  padding: 7px;
-  border-radius: 7px;
-  filter: drop-shadow(7px 7px 17px #7d7d7d77);
-  z-index: 10;
-}
-.notice {
-  background-color: #d1ffe7;
-}
-.alert {
-  background-color: #ffdccd;
-}
 .cf-turnstile {
   width: 300px;
   height: 65px;

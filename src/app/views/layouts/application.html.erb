@@ -97,9 +97,11 @@
       </div>
       <% end %>
     </main>
-    <% flash.each do |message_type, message| %>
-      <div class="flash <%= message_type %>"><%= message %></div>
-    <% end %>
+
+    <div id="flash">
+      <%= render "shared/flash" %>
+    </div>
+
     <%= render 'layouts/footer' %>
   </body>
 </html>

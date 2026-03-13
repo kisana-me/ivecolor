@@ -1,0 +1,65 @@
+.flash {
+  min-width: 200px;
+  max-width: 94vw;
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  padding: 1rem 2.5rem 1rem 1.5rem;
+  border-radius: 0.5rem;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: opacity 0.3s;
+  animation: flash-hide 3s forwards;
+  z-index: 1000;
+}
+.flash-message {
+  width: 100%;
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+}
+.flash-button {
+  border: none;
+  top: 50%;
+  right: 0.5rem;
+  position: absolute;
+  background: none;
+  color: #aaa;
+  font-size: 1.25rem;
+  transform: translateY(-50%);
+  line-height: 1;
+  cursor: pointer;
+}
+.flash-bar {
+  width: 100%;
+  height: 4px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: #525252;
+  transform-origin: left;
+  transform: scaleX(1);
+  animation: flash-bar 3s linear forwards;
+}
+.flash.notice .flash-bar {
+  background: #4ade80;
+}
+.flash.alert .flash-bar {
+  background: #f34f4f;
+}
+
+/* 3秒で透明になるアニメーション */
+@keyframes flash-hide {
+  0% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* 3秒でバーが左→右に縮む */
+@keyframes flash-bar {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}

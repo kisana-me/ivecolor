@@ -15,6 +15,7 @@ class CommentsController < ApplicationController
       return render_error()
     end
 
+    @comment.account = @current_account
     if @comment.save
       flash.now[:notice] = "コメントを投稿しました"
       render :create, formats: :turbo_stream

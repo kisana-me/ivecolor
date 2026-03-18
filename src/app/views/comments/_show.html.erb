@@ -1,17 +1,15 @@
-<% if defined? top %>
-<div class="comment">
-<% else %>
-<div class="reply">
-<% end %>
+<%# params: @comments, comment, *permission %>
+<div class="comment" id="comment-<%= comment.aid %>">
   <% if permission %>
-    <div>
-      <%= form_with(model: comment, url: comment_path(comment.aid), method: :put, data: { turbo: false }) do |f| %>
-        <%= f.label :visibility, "公開状況" %>
-        <%= f.select :visibility, Comment.visibilities.keys.map { |key| [t("activerecord.enums.comment.visibility.#{key}"), key] } %>
-        <%= f.submit "更新" %>
-      <% end %>
-    </div>
+  <div>
+    <%= form_with(model: comment, url: comment_path(comment.aid), method: :put) do |f| %>
+      <%= f.label :visibility, "公開状況" %>
+      <%= f.select :visibility, Comment.visibilities.keys.map { |key| [t("activerecord.enums.comment.visibility.#{key}"), key] } %>
+      <%= f.submit "更新" %>
+    <% end %>
+  </div>
   <% end %>
+
   <div class="comment-info">
     ID:<%= comment.aid %>
     名前:<%= comment.name.present? ? comment.name : '名無し' %>
@@ -20,24 +18,26 @@
     <% end %>
     日時:<%= comment.created_at.strftime('%Y/%m/%d %H:%M') %>
   </div>
+
   <div class="comment-content">
     <%= comment.content %>
   </div>
-  <% if top %>
-    <% replies = permission ? comment_all_replies(comment) : comment_public_replies(comment) %>
-    <% if replies.present? %>
+
+  <% if comment.comment_id.blank? %>
+    <% replies = @comments.select { |c| c.comment_id == comment.id } || [] %>
+    <% if replies.any? %>
     <details>
       <summary>スレッドを表示</summary>
       <div class="replies">
-        <% comment.comments.each do |cmt| %>
-          <%= render 'comments/show', comment: cmt, top: false, permission: permission %>
+        <% replies.each do |cmt| %>
+          <%= render "comments/show", comment: cmt, permission: permission %>
         <% end %>
       </div>
     </details>
     <% end %>
     <details>
       <summary>スレッドに参加</summary>
-      <%= render 'comments/form', comment: Comment.new, url: comments_path, post_aid: @post.aid, initial_replied: comment.aid %>
+      <%= render "comments/form", comment: Comment.new, url: comments_path, post_aid: comment.post.aid, initial_replied: comment.aid %>
     </details>
   <% end %>
 </div>

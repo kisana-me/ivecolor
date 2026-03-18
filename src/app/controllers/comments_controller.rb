@@ -25,12 +25,19 @@ class CommentsController < ApplicationController
   end
 
   def update
-    if @comment.update(update_comment_params)
-      flash[:notice] = "コメントを更新しました"
-    else
-      flash[:alert] = "エラー:#{@comment.errors.full_messages.join(', ')}"
-    end
-    redirect_to post_path(@comment.post.name_id)
+    # permission
+    success = @comment.update(update_comment_params)
+    flash.now[:notice] = "コメントを更新しました" if success
+    flash.now[:alert] = "コメントを更新できませんでした:#{@comment.errors.full_messages.join(', ')}" unless success
+
+    render turbo_stream: [
+      # turbo_stream.replace(
+      #   "comment-#{@comment.aid}",
+      #   partial: "show",
+      #   locals: { comment: @comment, permission: @current_account == @comment.post.account }
+      # ),
+      turbo_stream.update("flash", partial: "shared/flash")
+    ], status: success ? :ok : :unprocessable_entity
   end
 
   private

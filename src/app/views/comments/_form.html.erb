@@ -1,10 +1,11 @@
+<%# params: comment, url, post_aid, *initial_replied %>
 <div class="comment-form"
   id="<%= "comment-form" + (defined?(initial_replied) ? "-#{initial_replied}" : "") %>"
   data-controller="turnstile"
   data-turnstile-environment-value="<%= Rails.env %>"
   data-turnstile-sitekey-value="<%= ENV.fetch("CLOUDFLARE_TURNSTILE_SITE_KEY") %>">
   <%= form_with(model: comment, url: url) do |f| %>
-    <%= render 'shared/error_messages', instead: comment %>
+    <%= render "shared/error_messages", instead: comment %>
     <%= f.hidden_field :post_aid, value: post_aid %>
     <% if (defined? initial_replied) %>
       <div>
@@ -15,14 +16,14 @@
     <% if @current_account %>
       <div><%= @current_account.name %>としてコメント</div>
     <% end %>
-    <%= f.label :name, '名前' %>
-    <%= f.text_field :name, placeholder: '名前' %>
+    <%= f.label :name, "名前" %>
+    <%= f.text_field :name, placeholder: "名前" %>
     <br />
-    <%= f.label :content, 'コメント' %>
-    <%= f.text_area :content, placeholder: 'コメント' %>
+    <%= f.label :content, "コメント" %>
+    <%= f.text_area :content, placeholder: "コメント" %>
     <br />
-    <%= f.label :address, 'アドレス(非公開)' %>
-    <%= f.text_field :address, placeholder: 'アドレス(非公開)' %>
+    <%= f.label :address, "アドレス(非公開)" %>
+    <%= f.text_field :address, placeholder: "アドレス(非公開)" %>
     <br />
     <div class="cf-turnstile" data-turnstile-target="widget"></div>
     <br />

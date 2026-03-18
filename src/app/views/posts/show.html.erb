@@ -1,18 +1,18 @@
-<% keywords = @post.tags.pluck(:name).join(', ') %>
+<% keywords = @post.tags.pluck(:name).join(", ") %>
 <% provide(:title, @post.title) %>
 <% provide(:author,  @post.account.name) %>
 <% provide(:author_id, @post.account.aid) %>
 <% provide(:description, @post.summary) %>
 <% provide(:keywords, keywords) %>
-<% provide(:robots, @post.opened? ? '' : 'false') %>
-<% provide(:type, 'article') %>
+<% provide(:robots, @post.opened? ? "" : "false") %>
+<% provide(:type, "article") %>
 <% provide(:image, @post.thumbnail_url) %>
-<% provide(:card, 'summary_large_image') %>
+<% provide(:card, "summary_large_image") %>
 <% provide(:alt, @post.title) %>
-<% provide(:layout_style, 'full') %>
+<% provide(:layout_style, "full") %>
 
 <div class="post">
-  <% if @is_post_owner %>
+  <% if @permission %>
     <div class="post-owners-info">
       <div class="post-owners-message">あなたはこの記事の管理者です</div>
       <div>公開状況: <%= t("activerecord.enums.post.visibility.#{@post.visibility}") %></div>
@@ -21,7 +21,7 @@
       <div>合計閲覧数: <%= @views_count.to_i + @post.meta.fetch("views_count", 0).to_i %></div>
       <div>公開コメント数: <%= @post.comments.where(visibility: :opened).count %></div>
       <div>合計コメント数: <%= @post.comments.count %></div>
-      <div><%= link_to('編集', edit_post_path(@post.name_id), data: { turbo: false }, method: :get) %></div>
+      <div><%= link_to("編集", edit_post_path(@post.name_id), data: { turbo: false }, method: :get) %></div>
     </div>
   <% end %>
 
@@ -30,7 +30,7 @@
   </div>
 
   <div class="post-context">
-    <h1 class="post-title"><%= @post.title.present? ? @post.title : 'タイトルなし' %></h1>
+    <h1 class="post-title"><%= @post.title.present? ? @post.title : "タイトルなし" %></h1>
     <div class="post-summary"><%= @post.summary %></div>
 
     <div class="post-dates">
@@ -38,7 +38,7 @@
         <div>
           公開:
           <time datetime="<%= @post.published_at %>" itemprop="datepublished">
-            <%= @post.published_at.strftime('%Y/%m/%d %H:%M') %>
+            <%= @post.published_at.strftime("%Y/%m/%d %H:%M") %>
           </time>
         </div>
       <% end %>
@@ -46,7 +46,7 @@
         <div>
           更新:
           <time datetime="<%= @post.edited_at %>" itemprop="datemodified">
-            <%= @post.edited_at.strftime('%Y/%m/%d %H:%M') %>
+            <%= @post.edited_at.strftime("%Y/%m/%d %H:%M") %>
           </time>
         </div>
       <% end %>
@@ -58,10 +58,10 @@
     </div>
 
     <div class="post-account">
-      <%= link_to account_path(@post.account.name_id), class: 'post-account-path' do %>
+      <%= link_to account_path(@post.account.name_id), class: "post-account-path" do %>
         <div class="post-account-top">
           <div class="post-account-icon-container">
-            <%= image_tag(@post.account.icon_url, class: 'post-account-icon', alt: "#{@post.account.name}のアイコン") %>
+            <%= image_tag(@post.account.icon_url, class: "post-account-icon", alt: "#{@post.account.name}のアイコン") %>
           </div>
           <div class="post-account-name">
             <%= @post.account.name %>
@@ -72,7 +72,7 @@
 
     <div class="post-tags">
       <% @post.tags.each do |tag| %>
-        <%= link_to(tag.name, tag_path(tag.name_id), class: 'post-tag') %>
+        <%= link_to(tag.name, tag_path(tag.name_id), class: "post-tag") %>
       <% end %>
     </div>
 
@@ -106,6 +106,10 @@
 
   <div class="post-comments">
     <%= render "comments/form", comment: Comment.new, url: comments_path, post_aid: @post.aid %>
-    <%= render "comments/comments", post: @post %>
+    <div class="comments">
+      <% @comments.select { |c| c.comment_id.nil? }.each do |comment| %>
+        <%= render "comments/show", comment: comment, permission: @permission %>
+      <% end %>
+    </div>
   </div>
 </div>

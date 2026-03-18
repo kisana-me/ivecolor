@@ -17,10 +17,14 @@ class PostsController < ApplicationController
   end
 
   def show
-    @is_post_owner = @current_account && (@current_account.id == @post.account_id || admin?)
-    if @is_post_owner
+    @permission = @current_account && (@current_account.id == @post.account_id || admin?)
+    all_comments = @post.comments.from_normal_accounts.isnt_deleted.includes(:account).order(id: :desc)
+
+    if @permission
+      @comments = all_comments
       @views_count = ViewLog.where(viewable: @post).count
     else
+      @comments = all_comments.select { |c| c.opened? }
       log_view(@post)
     end
   end

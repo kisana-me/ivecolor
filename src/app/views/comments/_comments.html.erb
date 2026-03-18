@@ -1,7 +1,0 @@
-<div class="comments">
-  <% permission = admin? || (@current_account == post.account) %>
-  <% comments = permission ? post_all_comments(post) : post_public_comments(post) %>
-  <% comments.each do |comment| %>
-    <%= render 'comments/show', comment: comment, top: true, permission: permission %>
-  <% end %>
-</div>
